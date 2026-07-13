@@ -617,6 +617,69 @@
         padding: 65px 0;
       }
     }
+    /* Smooth entrance animations */
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero .eyebrow {
+  animation: heroFadeUp 0.7s ease both;
+}
+
+.hero h1 {
+  animation: heroFadeUp 0.8s 0.15s ease both;
+}
+
+.hero p {
+  animation: heroFadeUp 0.8s 0.3s ease both;
+}
+
+.hero-actions {
+  animation: heroFadeUp 0.8s 0.45s ease both;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card,
+.impact-item,
+.gallery img {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 34px rgba(0,0,0,0.18);
+}
+
+.gallery img:hover {
+  transform: scale(1.025);
+  box-shadow: 0 14px 28px rgba(28,43,55,0.20);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
   </style>
 </head>
 
@@ -921,6 +984,28 @@
     }
 
     document.getElementById("year").textContent = new Date().getFullYear();
+    const animatedItems = document.querySelectorAll(
+  "section, .impact-item, .card, .gallery img"
+);
+
+animatedItems.forEach(function(item) {
+  item.classList.add("reveal");
+});
+
+const observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+      observer.unobserve(entry.target);
+    }
+  });
+}, {
+  threshold: 0.12
+});
+
+animatedItems.forEach(function(item) {
+  observer.observe(item);
+});
   </script>
 
 </body>
